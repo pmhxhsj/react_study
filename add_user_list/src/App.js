@@ -1,33 +1,20 @@
-import react, { useState } from 'react';
-
-function UserInput({ username, email }) {
-  return (
-    <div>
-      {username} ({email})
-    </div>
-  );
-}
+import React, { useRef, useState } from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
 
 function App() {
   const [inputs, setInputs] = useState({
-    name: '',
-    nickname: '',
+    username: '',
+    email: '',
   });
 
-  const { name, nickname } = inputs;
+  const { username, email } = inputs;
 
   const onChange = (e) => {
-    const { value, name } = e.target;
+    const { name, value } = e.target;
     setInputs({
       ...inputs,
       [name]: value,
-    });
-  };
-
-  const onClick = () => {
-    setInputs({
-      name: '',
-      nickname: '',
     });
   };
 
@@ -49,18 +36,28 @@ function App() {
     },
   ]);
 
-  return (
-    <div className='App'>
-      <input name='name' value={name} onChange={onChange} placeholder='이름을 입력해주세요.' />
-      <input name='nickname' value={nickname} onChange={onChange} placeholder='이름을 입력해주세요.' />
-      <button onClick={onClick}>등록</button>
+  const nextId = useRef(4);
 
-      <div>
-        {users.map((v) => {
-          <UserInput name={v.username} email={v.email} key={v.id} />;
-        })}
-      </div>
-    </div>
+  const onCreate = () => {
+    const user = {
+      id: nextId.current,
+      username,
+      email,
+    };
+    setUsers(users.concat(user));
+
+    setInputs({
+      username: '',
+      email: '',
+    });
+
+    nextId.current += 1;
+  };
+  return (
+    <>
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
+      <UserList users={users} />
+    </>
   );
 }
 
