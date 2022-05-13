@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import VideoList from './components/video_list/video_list';
+import './index.css';
 
 export default function App() {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     const requestOptions = {
-      method: 'GET',
-      redirect: 'follow',
+      baseURL: 'https://content-youtube.googleapis.com/youtube/v3',
+      params: { key: process.env.REACT_APP_youtubeKey },
     };
 
     fetch(
